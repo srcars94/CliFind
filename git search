@@ -1,0 +1,16 @@
+param (
+    [string]$SearchTerm
+)
+
+if (-not $SearchTerm) {
+    Write-Host "Usage: git search <term>"
+    exit 1
+}
+
+Write-Host "Searching C:\ for '*$SearchTerm*'..."
+
+Get-ChildItem -Path "C:\" -Recurse -ErrorAction SilentlyContinue -Force |
+    Where-Object { $_.Name -like "*$SearchTerm*" } |
+    Select-Object FullName, Length, LastWriteTime
+
+git config --global alias.search "!powershell -ExecutionPolicy Bypass -File 'C:/Scripts/git-search.ps1'"
